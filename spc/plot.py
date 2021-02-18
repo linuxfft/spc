@@ -20,7 +20,7 @@ def normal(data: List[float], usl, lsl, step=1, density=True):
     mean = np.mean(data)
     d = np.random.normal(mean, sigma, 100)
     dd = d.tolist()
-    x_line, y_line = histogram(dd, usl=usl, lsl=lsl, density=density)
+    x_line, y_line = histogram(dd, usl=usl, lsl=lsl, step=step, density=density)
     return x_line, y_line
 
 
