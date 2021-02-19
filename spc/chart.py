@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
+from __future__ import division  # 精确除以
 import numpy as np
 from .table import A2, A3, D3, D4, B3, B4
 from typing import List, Optional, Dict, Any
 import logging
-import sys
-major_version = sys.version_info.major
-if major_version == 2:
-    from __future__ import division # 精确除以
 
 _logger = logging.getLogger(__name__)
 
@@ -129,8 +126,8 @@ def rbar(data, size, newdata=None):
 
 def u(data, size, newdata):
     # type: (np.ndarray, int, Any) ->  Optional[Dict]
-
     """
+
     SPC U-charts
     :param data:
     :param size:

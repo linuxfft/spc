@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+from __future__ import division  # 精确除以
+import logging
+from typing import List, Optional, Union, Set
 import numpy as np
 import sys
 major_version = sys.version_info.major
-from typing import List, Optional, Union, Set
-import logging
 
 _logger = logging.getLogger(__name__)
 
@@ -23,9 +24,10 @@ def normal(data, usl, lsl, step=1, density=True):
     mean = np.mean(data)
     d = np.random.normal(mean, sigma, 100)
     dd = d.tolist()
-    x_line, y_line = histogram(dd, usl=usl, lsl=lsl, step=step, density=density)
+    x_line, y_line = histogram(
+        dd, usl=usl, lsl=lsl, step=step, density=density)
     return x_line, y_line
-    
+
 
 def histogram(data, usl, lsl, step=1, density=True):
     # type: (Union[List[float], object], float, float, int, bool) -> tuple
