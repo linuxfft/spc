@@ -22,7 +22,8 @@ def covert2dArray(data, size):
     return ret
 
 
-def xbar_sbar(data: np.ndarray, size: int, newdata=None) -> Optional[Dict]:
+def xbar_sbar(data, size, newdata):
+    # type: (np.ndarray, int, Any) ->  Optional[Dict]
     assert size >= 2
     assert size <= 10
     newvalues = None
@@ -126,7 +127,9 @@ def rbar(data, size, newdata=None):
     return ret
 
 
-def u(data: np.ndarray, size: int, newdata=None) ->Optional[Dict]:
+def u(data, size, newdata):
+    # type: (np.ndarray, int, Any) ->  Optional[Dict]
+
     """
     SPC U-charts
     :param data:
@@ -156,7 +159,9 @@ def u(data: np.ndarray, size: int, newdata=None) ->Optional[Dict]:
     return ret
 
 
-def np_chart(data: np.ndarray, size: int, newdata=None)->Optional[Dict]:
+def np_chart(data, size, newdata):
+    # type: (np.ndarray, int, Any) ->  Optional[Dict]
+
     sizes, data = data.T
     if size == 1:
         sizes, data = data, sizes
@@ -180,7 +185,8 @@ def np_chart(data: np.ndarray, size: int, newdata=None)->Optional[Dict]:
     return ret
 
 
-def sbar(data: np.ndarray, size: int, newdata=None)->Optional[Dict]:
+def sbar(data, size, newdata):
+    # type: (np.ndarray, int, Any) ->  Optional[Dict]
     """
 
     :rtype: 元组，数据，中线，下线，上线
