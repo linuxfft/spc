@@ -1,13 +1,18 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 from .table import A2, A3, D3, D4, B3, B4
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Any
 import logging
+import sys
+major_version = sys.version_info.major
+if major_version == 2:
+    from __future__ import division # 精确除以
 
 _logger = logging.getLogger(__name__)
 
 
-def covert2dArray(data: List[float], size: int) -> Optional[np.ndarray]:
+def covert2dArray(data, size):
+    # type: (List[float], int) ->  Optional[np.ndarray]
     b = len(data) % size
     if b != 0:
         _logger.error(u"数据长度不正确!!! 自动截取")
@@ -49,7 +54,8 @@ def xbar_sbar(data: np.ndarray, size: int, newdata=None) -> Optional[Dict]:
     return ret
 
 
-def xbar_rbar(data: np.ndarray, size: int, newdata=None) -> Optional[Dict]:
+def xbar_rbar(data, size, newdata=None):
+    # type: (np.ndarray, int, Any) ->  Optional[Dict]
     """
 
     :rtype: 元组，数据，中线，下线，上线
@@ -85,7 +91,8 @@ def xbar_rbar(data: np.ndarray, size: int, newdata=None) -> Optional[Dict]:
     return ret
 
 
-def rbar(data: np.ndarray, size: int, newdata=None)->Optional[Dict]:
+def rbar(data, size, newdata=None):
+    # type: (np.ndarray, int, Any) ->  Optional[Dict]
     """
 
     :rtype: 元组，数据，中线，下线，上线
@@ -206,7 +213,8 @@ def sbar(data: np.ndarray, size: int, newdata=None)->Optional[Dict]:
     return ret
 
 
-def cpk(data: List[float], usl: float, lsl: float) -> Optional[float]:
+def cpk(data, usl, lsl):
+    # type: (List[float], float, float) -> Optional[float]
     if not usl or not lsl:
         return None
     if not data:
@@ -221,7 +229,8 @@ def cpk(data: List[float], usl: float, lsl: float) -> Optional[float]:
     return Cpk
 
 
-def cmk(data: List, usl: float, lsl: float) -> Optional[float]:
+def cmk(data, usl, lsl):
+    # type: (List[float], float, float) -> Optional[float]
     if not usl or not lsl:
         return None
     if not data:

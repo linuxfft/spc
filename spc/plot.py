@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 import numpy as np
-from typing import List, Optional, Union
+import sys
+major_version = sys.version_info.major
+from typing import List, Optional, Union, Set
 import logging
 
 _logger = logging.getLogger(__name__)
 
 
-def normal(data: List[float], usl, lsl, step=1, density=True):
+def normal(data, usl, lsl, step=1, density=True):
+    # type: (List[float], float, float, int, bool) -> tuple
     if usl < lsl:
         _logger.error("histogram usl Must Be Greater Than lsl")
         return None, None
@@ -22,9 +25,10 @@ def normal(data: List[float], usl, lsl, step=1, density=True):
     dd = d.tolist()
     x_line, y_line = histogram(dd, usl=usl, lsl=lsl, step=step, density=density)
     return x_line, y_line
+    
 
-
-def histogram(data: Union[List[float], object], usl, lsl, step=1, density=True):
+def histogram(data, usl, lsl, step=1, density=True):
+    # type: (Union[List[float], object], float, float, int, bool) -> tuple
     if usl < lsl:
         _logger.error("histogram usl Must Be Greater Than lsl")
         return None, None
