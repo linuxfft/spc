@@ -14,7 +14,7 @@ def covert2dArray(data, size):
     if b != 0:
         _logger.error(u"数据长度不正确!!! 自动截取")
     l = int(len(data) / size)
-    offset = len(data) - b
+    offset = int(len(data) - b)
     ret = np.array(data[:offset]).reshape(l, size)
     return ret
 
@@ -68,7 +68,7 @@ def xbar_rbar(data, size, newdata=None):
     for xs in data:
         assert len(xs) == size
         R.append(max(xs) - min(xs))
-        X.append(np.mean(xs))
+        X.append(round(np.mean(xs), 2))
 
     if newdata:
         newvalues = [np.mean(xs) for xs in newdata]
@@ -81,9 +81,9 @@ def xbar_rbar(data, size, newdata=None):
 
     ret = {
         "data": X,
-        "center": Xbar,
-        "lower": lcl,
-        "upper": ucl,
+        "center": round(Xbar, 2),
+        "lower": round(lcl, 2),
+        "upper": round(ucl, 2),
     }
 
     return ret
