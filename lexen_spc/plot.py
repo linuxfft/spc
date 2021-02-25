@@ -8,6 +8,9 @@ major_version = sys.version_info.major
 
 _logger = logging.getLogger(__name__)
 
+def normfun(x, mu, sigma):
+    pdf = np.exp(-((x - mu)**2)/(2*sigma**2)) / (sigma * np.sqrt(2*np.pi))
+    return pdf
 
 def normal(data, usl, lsl, step=1, density=True):
     # type: (List[float], float, float, int, bool) -> tuple
@@ -26,6 +29,12 @@ def normal(data, usl, lsl, step=1, density=True):
     dd = d.tolist()
     x_line, y_line = histogram(
         dd, usl=usl, lsl=lsl, step=step, density=density)
+    for i, val in enumerate(x_line):
+        if i+1 < len(x_line):
+            if density:
+                y_line[i] = normfun((x_line[i]+x_line[i+1])/2, mean, sigma)
+            else:
+                y_line[i] = normfun((x_line[i]+x_line[i+1])/2, mean, sigma)*100
     return x_line, y_line
 
 
@@ -45,7 +54,7 @@ def histogram(data, usl, lsl, step=1, density=True):
     data_min = mean - 3 * sigma
     data_max = mean + 3 * sigma
     if usl and lsl:
-        bins = np.arange(lsl, usl, step)
+        bins = np.arange(lsl, usl + step, step)
     else:
         bins = np.arange(data_min - step, data_max + step, step)
     y_line, x_line = np.histogram(data, bins, density=density)
