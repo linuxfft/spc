@@ -32,9 +32,9 @@ def normal(data, usl, lsl, step=1, density=True):
     for i, val in enumerate(x_line):
         if i+1 < len(x_line):
             if density:
-                y_line[i] = normfun((x_line[i]+x_line[i+1])/2, mean, sigma)
+                y_line[i] = normfun((x_line[i]+x_line[i+1])/2, mean, sigma)*step
             else:
-                y_line[i] = normfun((x_line[i]+x_line[i+1])/2, mean, sigma)*100
+                y_line[i] = normfun((x_line[i]+x_line[i+1])/2, mean, sigma)*100*step
     return x_line, y_line
 
 
