@@ -29,12 +29,14 @@ def normal(data, usl, lsl, step=1, density=True):
     dd = d.tolist()
     x_line, y_line = histogram(
         dd, usl=usl, lsl=lsl, step=step, density=density)
-    for i, val in enumerate(x_line):
-        if i+1 < len(x_line):
-            if density:
-                y_line[i] = normfun((x_line[i]+x_line[i+1])/2, mean, sigma)*step
-            else:
-                y_line[i] = normfun((x_line[i]+x_line[i+1])/2, mean, sigma)*100*step
+    ll = len(x_line)
+    for i in range(ll):
+        if i + 1 >= ll:
+            continue
+        if density:
+            y_line[i] = normfun((x_line[i]+x_line[i+1])/2, mean, sigma)*step
+        else:
+            y_line[i] = normfun((x_line[i]+x_line[i+1])/2, mean, sigma)*100*step
     return x_line, y_line
 
 
