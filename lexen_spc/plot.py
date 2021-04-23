@@ -8,20 +8,22 @@ major_version = sys.version_info.major
 
 _logger = logging.getLogger(__name__)
 
+
 def normfun(x, mu, sigma):
     pdf = np.exp(-((x - mu)**2)/(2*sigma**2)) / (sigma * np.sqrt(2*np.pi))
     return pdf
 
+
 def normal(data, usl, lsl, step=1, density=True):
     # type: (List[float], float, float, int, bool) -> tuple
     if usl < lsl:
-        _logger.error("histogram usl Must Be Greater Than lsl")
+        _logger.error("normal usl Must Be Greater Than lsl")
         return None, None
     if not isinstance(step, int):
-        _logger.error("histogram Step Must Be Int Type")
+        _logger.error("normal Step Must Be Int Type")
         return None, None
     if not data:
-        _logger.error("histogram Data Must Be Int Type")
+        _logger.error("normal Data Is Empty")
         return None, None
     sigma = np.std(data)
     mean = np.mean(data)
@@ -29,14 +31,13 @@ def normal(data, usl, lsl, step=1, density=True):
     dd = d.tolist()
     x_line, y_line = histogram(
         dd, usl=usl, lsl=lsl, step=step, density=density)
-    ll = len(x_line)
+    ll = len(x_line) - 1
     for i in range(ll):
-        if i + 1 >= ll:
-            continue
         if density:
             y_line[i] = normfun((x_line[i]+x_line[i+1])/2, mean, sigma)*step
         else:
-            y_line[i] = normfun((x_line[i]+x_line[i+1])/2, mean, sigma)*100*step
+            y_line[i] = normfun((x_line[i]+x_line[i+1]) /
+                                2, mean, sigma)*100*step
     return x_line, y_line
 
 
@@ -49,7 +50,7 @@ def histogram(data, usl, lsl, step=1, density=True):
         _logger.error("histogram Step Must Be Int Type")
         return None, None
     if not data:
-        _logger.error("histogram Data Must Be Int Type")
+        _logger.error("histogram Data Is Empty!!!")
         return None, None
     sigma = np.std(data)
     mean = np.mean(data)
