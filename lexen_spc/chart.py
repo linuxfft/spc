@@ -2,7 +2,7 @@
 from __future__ import division  # 精确除以
 import numpy as np
 from .table import A2, A3, D3, D4, B3, B4
-from typing import List, Optional, Dict, Any
+# from typing import List, Optional, Dict, Any
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -78,7 +78,12 @@ def xbar_rbar(data, size, newdata=None):
 
     lcl = Xbar - A2[size] * Rbar
     ucl = Xbar + A2[size] * Rbar
-
+    if np.isnan(Xbar):
+        Xbar = 0
+    if np.isnan(lcl):
+        lcl = 0
+    if np.isnan(ucl):
+        ucl = 0
     ret = {
         "data": X,
         "center": round(Xbar, 2),
