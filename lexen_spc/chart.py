@@ -31,7 +31,7 @@ def xbar_sbar(data, size, newdata):
     for xs in data:
         assert len(xs) == size
         S.append(np.std(xs, ddof=1))
-        X.append(np.mean(xs))
+        X.append(round(np.mean(xs), 2))
 
     if newdata:
         newvalues = [np.mean(xs) for xs in newdata]
@@ -44,9 +44,9 @@ def xbar_sbar(data, size, newdata):
 
     ret = {
         "data": X,
-        "center": xbar,
-        "lower": lclx,
-        "upper": uclx,
+        "center": round(xbar, 2),
+        "lower": round(lclx, 2),
+        "upper": round(uclx, 2),
     }
 
     return ret
@@ -109,7 +109,7 @@ def rbar(data, size, newdata=None):
     R = []  # values
     for xs in data:
         assert len(xs) == size
-        R.append(max(xs) - min(xs))
+        R.append(round(max(xs) - min(xs), 2))
 
     if newdata:
         newvalues = [max(xs) - min(xs) for xs in newdata]
@@ -121,9 +121,9 @@ def rbar(data, size, newdata=None):
 
     ret = {
         "data": R,
-        "center": Rbar,
-        "lower": lcl,
-        "upper": ucl,
+        "center": round(Rbar, 2),
+        "lower": round(lcl, 2),
+        "upper": round(ucl, 2),
     }
 
     return ret
@@ -152,10 +152,10 @@ def u(data, size, newdata):
         ucl.append(ubar + 3 * np.sqrt(ubar / i))
 
     ret = {
-        "data": data2,
-        "center": ubar,
-        "lower": lcl,
-        "upper": ucl,
+        "data": round(data2, 2),
+        "center": round(ubar, 2),
+        "lower": round(lcl, 2),
+        "upper": round(ucl, 2),
     }
 
     return ret
@@ -179,9 +179,9 @@ def np_chart(data, size, newdata):
 
     ret = {
         "data": data,
-        "center": pbar,
-        "lower": lcl,
-        "upper": ucl,
+        "center": round(pbar, 2),
+        "lower": round(lcl, 2),
+        "upper": round(ucl, 2),
     }
 
     return ret
@@ -201,7 +201,7 @@ def sbar(data, size, newdata):
     S = []
     for xs in data:
         assert len(xs) == size
-        S.append(np.std(xs, ddof=1))
+        S.append(round(np.std(xs, ddof=1), 2))
 
     if newdata:
         newvalues = [np.std(xs, ddof=1) for xs in newdata]
@@ -213,9 +213,9 @@ def sbar(data, size, newdata):
 
     ret = {
         "data": S,
-        "center": sbar,
-        "lower": lcls,
-        "upper": ucls,
+        "center": round(sbar, 2),
+        "lower": round(lcls, 2),
+        "upper": round(ucls, 2),
     }
 
     return ret
@@ -234,7 +234,7 @@ def cpk(data, usl, lsl):
     Cpu = float(usl - m) / (3 * sigma)
     Cpl = float(m - lsl) / (3 * sigma)
     Cpk = np.min([Cpu, Cpl])
-    return Cpk
+    return round(Cpk, 2)
 
 
 def cmk(data, usl, lsl):
@@ -250,4 +250,4 @@ def cmk(data, usl, lsl):
     a = (usl - avg) / (3 * sigma)
     b = (avg - lsl) / (3 * sigma)
     cmk = np.min([a, b])
-    return cmk
+    return round(cmk, 2)
