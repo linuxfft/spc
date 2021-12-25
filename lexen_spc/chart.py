@@ -251,3 +251,25 @@ def cmk(data, usl, lsl):
     b = (avg - lsl) / (3 * sigma)
     cmk = np.min([a, b])
     return round(cmk, 2)
+
+
+def cp(data, usl, lsl):
+    # type: (List[float], float, float) -> Optional[float]
+    if not usl or not lsl:
+        return None
+    if not data:
+        return None
+    sigma = np.std(data)
+    ret = (usl - lsl) / 6 * sigma
+    return round(ret, 2)
+
+
+def cr(data, usl, lsl):
+    # type: (List[float], float, float) -> Optional[float]
+    if not usl or not lsl:
+        return None
+    if not data:
+        return None
+    sigma = np.std(data)
+    ret = 6 * sigma / (usl - lsl)
+    return round(ret, 2)
