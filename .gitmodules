@@ -1,6 +1,6 @@
-[submodule "gtest"]
-	path = tests/gtest
-	url = https://github.com/google/googletest.git
 [submodule "numcpp"]
 	path = numcpp
 	url = https://github.com/dpilger26/NumCpp.git
+[submodule "tests/gtest"]
+	path = tests/gtest
+	url = https://github.com/google/googletest.git
