@@ -1,0 +1,169 @@
+//
+// Created by 华为 on 2022/3/14.
+//
+
+#include "stats.h"
+#include "error.h"
+#include "strings.h"
+#include "NumCpp.hpp"
+
+using namespace nc;
+
+ST_RET CalcStandardDeviation(double *data, size_t length, int ddof, double mean, CALC_RET *ret) {
+    float sum = 0.0, sDeviation = 0.0;
+    int i, sRet = ERROR_NO_ERROR;
+
+    if (data == NULL) {
+        return ERROR_NULL_PTR;
+    }
+
+    if (length <= 0) {
+        return ERROR_DATA_SIZE;
+    }
+
+    if (ret == NULL) {
+        return ERROR_NULL_PTR;
+    }
+
+    memset(ret, 0, sizeof(CALC_RET));
+    ret->ret = sRet;
+
+    if (length <= ddof) {
+        sRet = ERROR_DATA_SIZE;
+        return sRet;
+    }
+
+    if (mean == 0.0) {
+        // 需要重新计算
+        for (i = 0; i < length; i++) {
+            sum += data[i];
+        }
+        // Calculating mean
+        mean = sum / length;
+    }
+
+
+    for (i = 0; i < length; ++i) {
+        sDeviation += pow(data[i] - mean, 2);
+    }
+
+    ret->info = nc::round(sqrt(sDeviation / length - ddof), 2);
+    return sRet;
+}
+
+ST_RET CalcAvg(double *data, size_t length, CALC_RET *ret) {
+    float sum = 0.0;
+    ST_RET sRet = ERROR_NO_ERROR;
+    if (data == NULL) {
+        return ERROR_NULL_PTR;
+    }
+
+    if (length <= 0) {
+        return ERROR_DATA_SIZE;
+    }
+
+    if (ret == NULL) {
+        return ERROR_NULL_PTR;
+    }
+
+    memset(ret, 0, sizeof(CALC_RET));
+    ret->ret = sRet;
+
+    for (int i = 0; i < length; i++) {
+        sum += data[i];
+    }
+    // Calculating Avg
+    ret->info = nc::round(sum / length, 2);
+
+    return ERROR_NO_ERROR;
+}
+
+
+ST_RET CalcMean(double *data, size_t length, CALC_RET *ret) {
+    double sum = 0.0;
+    ST_RET sRet = ERROR_NO_ERROR;
+    if (data == NULL) {
+        return ERROR_NULL_PTR;
+    }
+
+    if (length <= 0) {
+        return ERROR_DATA_SIZE;
+    }
+
+    if (ret == NULL) {
+        return ERROR_NULL_PTR;
+    }
+
+    memset(ret, 0, sizeof(CALC_RET));
+    ret->ret = sRet;
+
+    for (int i = 0; i < length; i++) {
+        sum += data[i];
+    }
+    // Calculating mean
+    ret->info = nc::round(sum / length, 2);
+
+    return ERROR_NO_ERROR;
+}
+
+
+ST_RET CalcHistogram(double *data, size_t length, float usl, float lsl, int step, bool density, PLOT_RET *ret) {
+    ST_RET sRet = ERROR_NO_ERROR;
+    if (data == NULL) {
+        return ERROR_NULL_PTR;
+    }
+    if (usl <= 0 || lsl <= 0) {
+        return ERROR_OVER_FLOW;
+    }
+
+    if (usl <= lsl) {
+        return ERROR_OVER_FLOW;
+    }
+
+    if (ret == NULL) {
+        return ERROR_NULL_PTR;
+    }
+
+    memset(ret, 0, sizeof(PLOT_RET));
+
+    CALC_RET dRet;
+
+    sRet = CalcMean(data, length, &dRet);
+    float mean = dRet.info;
+
+    sRet = CalcStandardDeviation(data, length, 1, mean, &dRet);
+
+    double sigma = dRet.info;
+
+    double data_min = mean - 3 * sigma;
+    double data_max = mean + 3 * sigma;
+    double fStep = (double) step;
+    NdArray<double> bins = NdArray<double>();
+    if (usl && lsl) {
+        bins = nc::arange((double) lsl, usl + fStep, fStep);
+    } else {
+        bins = nc::arange(data_min - fStep, data_max + fStep, fStep);
+    }
+    NdArray<double> d = NdArray<double>(data, length);
+    NdArray<nc::uint32> y_line = nc::histogram(d, bins);
+
+    int y_size = y_line.size();
+    double *y = (double *) calloc(y_size, sizeof(double));
+
+    int eff_length = 0;
+    for (int i = 0; i < y_size; ++i) {
+        nc::uint32 x = y_line[i];
+        if (nc::isnan(x)) {
+            y_line[i] = 0; //无效值置位为0
+        }
+        y[i] = y_line[i] / length;
+        eff_length += y_line[i];
+    }
+
+    ret->y_data = y;
+    ret->y_size = y_size;
+    ret->x_data = bins.data();
+    ret->x_size = bins.size();
+
+    return ERROR_NO_ERROR;
+}
