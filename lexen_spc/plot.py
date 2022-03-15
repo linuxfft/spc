@@ -66,7 +66,7 @@ def histogram(data, usl, lsl, step=1, density=True):
     # data中有效数据的长度
     eff_length = 0
     for i, val in enumerate(y_line):
-        if np.nan in y_line.tolist():
+        if np.isnan(val):
             y_line[i] = 0
         y.append((y_line[i]) / len(data))
         eff_length += y_line[i]
