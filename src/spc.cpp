@@ -6,7 +6,9 @@
 #include "table.h"
 #include "stats.h"
 #include "NumCpp.hpp"
+
 using namespace nc;
+
 /*!
  *
  * @param data : 二维浮点指针,
@@ -15,12 +17,12 @@ using namespace nc;
  * @return
  */
 
-int xbarSbar(double **data, size_t n_col, size_t n_row, SPC_RET *spc_ret) {
+int xbarSbar(double **data, size_t n_col, size_t n_row, SPC_RET **spc_ret) {
     if (n_row < 2 || n_row > 10) {
         return ERROR_DATA_SIZE;
     }
 
-    if (spc_ret == NULL) {
+    if (*spc_ret == NULL) {
         return ERROR_NULL_PTR;
     }
 
@@ -43,14 +45,14 @@ int xbarSbar(double **data, size_t n_col, size_t n_row, SPC_RET *spc_ret) {
         }
         CalcMean(d, n_col, &x_ret);
         if (x_ret.ret == ERROR_NO_ERROR) {
-            x_mean = x_ret.info;
+            x_mean = x_ret.data;
             X[i] = x_mean;
         } else {
             return ERROR_NO_ERROR;
         }
         CalcStandardDeviation(data[i], n_col, 1, x_mean, &s_ret);
         if (s_ret.ret == ERROR_NO_ERROR) {
-            s_std = s_ret.info;
+            s_std = s_ret.data;
             S[i] = s_std;
         }
     }
@@ -60,14 +62,16 @@ int xbarSbar(double **data, size_t n_col, size_t n_row, SPC_RET *spc_ret) {
     CalcMean(S, n_row, &sbar_ret);
     CalcMean(X, n_row, &xbar_ret);
 
-    double lclx = xbar_ret.info - A3[n_col] * sbar_ret.info;
-    double uclx = xbar_ret.info + A3[n_col] * sbar_ret.info;
+    double lclx = xbar_ret.data - A3[n_col] * sbar_ret.data;
+    double uclx = xbar_ret.data + A3[n_col] * sbar_ret.data;
 
-    spc_ret->data = X;
-    spc_ret->length = n_row;
-    spc_ret->center = round(sbar_ret.info);
-    spc_ret->lower = round(lclx);
-    spc_ret->upper = round(uclx);
+    memcpy_spc_ret(spc_ret, X, n_row);
+
+    SPC_RET *pRet = *spc_ret;
+
+    pRet->center = nc::round(sbar_ret.data, 2);
+    pRet->lower = nc::round(lclx, 2);
+    pRet->upper = nc::round(uclx, 2);
 
     return ERROR_NO_ERROR;
 }
@@ -96,11 +100,11 @@ float cpk(double *data, size_t length, double usl, double lsl) {
     CALC_RET ret;
     ST_RET stRet;
     stRet = CalcMean(data, length, &ret);
-    float mean = ret.info;
+    float mean = ret.data;
 
     stRet = CalcStandardDeviation(data, length, 1, mean, &ret);
 
-    float sigma = ret.info;
+    float sigma = ret.data;
 
     float Cpu = float(usl - mean) / (3 * sigma);
     float Cpl = float(mean - lsl) / (3 * sigma);
@@ -131,7 +135,7 @@ double cmk(double *data, size_t length, double usl, double lsl) {
     CALC_RET ret;
     ST_RET stRet;
     stRet = CalcAvg(data, length, &ret);
-    double avg = ret.info;
+    double avg = ret.data;
 
     if (usl < avg or lsl > avg) {
         return ERROR_OVER_FLOW;
@@ -139,7 +143,7 @@ double cmk(double *data, size_t length, double usl, double lsl) {
 
     stRet = CalcStandardDeviation(data, length, 1, 0.0, &ret);
 
-    double sigma = ret.info;
+    double sigma = ret.data;
 
     double a = (usl - avg) / (3 * sigma);
     double b = (avg - lsl) / (3 * sigma);
@@ -172,9 +176,9 @@ double cp(double *data, size_t length, double usl, double lsl) {
     ST_RET stRet;
     stRet = CalcStandardDeviation(data, length, 1, 0.0, &ret);
 
-    double sigma = ret.info;
+    double sigma = ret.data;
 
-    sigma = ret.info;
+    sigma = ret.data;
     Cp = (usl - lsl) / 6 * sigma;
 
     return Cp;
