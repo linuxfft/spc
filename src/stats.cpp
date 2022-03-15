@@ -47,7 +47,7 @@ ST_RET CalcStandardDeviation(double *data, size_t length, int ddof, double mean,
         sDeviation += pow(data[i] - mean, 2);
     }
 
-    ret->info = nc::round(sqrt(sDeviation / length - ddof), 2);
+    ret->data = nc::round(sqrt(sDeviation / length - ddof), 2);
     return sRet;
 }
 
@@ -73,7 +73,7 @@ ST_RET CalcAvg(double *data, size_t length, CALC_RET *ret) {
         sum += data[i];
     }
     // Calculating Avg
-    ret->info = nc::round(sum / length, 2);
+    ret->data = nc::round(sum / length, 2);
 
     return ERROR_NO_ERROR;
 }
@@ -101,13 +101,13 @@ ST_RET CalcMean(double *data, size_t length, CALC_RET *ret) {
         sum += data[i];
     }
     // Calculating mean
-    ret->info = nc::round(sum / length, 2);
+    ret->data = nc::round(sum / length, 2);
 
     return ERROR_NO_ERROR;
 }
 
 
-ST_RET CalcHistogram(double *data, size_t length, float usl, float lsl, int step, bool density, PLOT_RET *ret) {
+ST_RET CalcHistogram(double *data, size_t length, float usl, float lsl, int step, bool density, PLOT_RET **ret) {
     ST_RET sRet = ERROR_NO_ERROR;
     if (data == NULL) {
         return ERROR_NULL_PTR;
@@ -120,7 +120,7 @@ ST_RET CalcHistogram(double *data, size_t length, float usl, float lsl, int step
         return ERROR_OVER_FLOW;
     }
 
-    if (ret == NULL) {
+    if (*ret == NULL) {
         return ERROR_NULL_PTR;
     }
 
@@ -129,11 +129,11 @@ ST_RET CalcHistogram(double *data, size_t length, float usl, float lsl, int step
     CALC_RET dRet;
 
     sRet = CalcMean(data, length, &dRet);
-    float mean = dRet.info;
+    double mean = dRet.data;
 
     sRet = CalcStandardDeviation(data, length, 1, mean, &dRet);
 
-    double sigma = dRet.info;
+    double sigma = dRet.data;
 
     double data_min = mean - 3 * sigma;
     double data_max = mean + 3 * sigma;
@@ -160,10 +160,64 @@ ST_RET CalcHistogram(double *data, size_t length, float usl, float lsl, int step
         eff_length += y_line[i];
     }
 
-    ret->y_data = y;
-    ret->y_size = y_size;
-    ret->x_data = bins.data();
-    ret->x_size = bins.size();
+    memcpy_plot_ret(ret, bins.data(), bins.size(), y, y_size);
 
     return ERROR_NO_ERROR;
+}
+
+double normFun(double x, double mu, double sigma) {
+    double pdf = nc::exp(-(nc::square(x - mu)) / (2 * nc::square(sigma))) / (sigma * nc::sqrt(2 * constants::pi));
+    return pdf;
+}
+
+
+ST_RET CalcNormalDist(double *data, size_t length, float usl, float lsl, int step, bool density, PLOT_RET **ret) {
+    ST_RET sRet = ERROR_NO_ERROR;
+    if (data == NULL) {
+        return ERROR_NULL_PTR;
+    }
+    if (usl <= 0 || lsl <= 0) {
+        return ERROR_OVER_FLOW;
+    }
+
+    if (usl <= lsl) {
+        return ERROR_OVER_FLOW;
+    }
+
+    if (*ret == NULL) {
+        return ERROR_NULL_PTR;
+    }
+
+    memset(ret, 0, sizeof(PLOT_RET));
+
+    CALC_RET dRet;
+
+    sRet = CalcMean(data, length, &dRet);
+    double mean = dRet.data;
+
+    sRet = CalcStandardDeviation(data, length, 1, mean, &dRet);
+
+    double sigma = dRet.data;
+
+    auto shape = nc::Shape(1, 100);
+
+    NdArray<double> normal_data = nc::random::normal(shape, mean, sigma);
+
+
+    sRet = CalcHistogram(normal_data.data(), normal_data.size(), usl, lsl, step, density, ret);
+
+    PLOT_RET *pRet = *ret;
+
+    if (pRet != NULL) {
+        for (int i = 0; i <= pRet->lXData; ++i) {
+            double a = pRet->pXData[i];
+            double b = pRet->pXData[i + 1];
+            double d = normFun((a + b) / 2, mean, sigma) * step;
+            if (!density)d = d * 100;
+            pRet->pYData[i] = d;
+        }
+    }
+
+    return ERROR_NO_ERROR;
+
 }

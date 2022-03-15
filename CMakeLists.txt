@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 project(spc)
 set(CMAKE_CXX_STANDARD 14)
 
-set(SOURCE_FILES src/spc.cpp src/stats.cpp)
+set(SOURCE_FILES src/spc.cpp src/stats.cpp src/type.cpp)
 
 add_library(spc_lib_obj OBJECT "")
 
