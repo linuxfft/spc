@@ -17,5 +17,7 @@ target_include_directories(spc_test
         PRIVATE
         ../include)
 
+set_target_properties(spc_test PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+
 include(GoogleTest)
 gtest_add_tests(spc_test "" ${TEST_SOURCE_FILES})
