@@ -18,23 +18,23 @@ double mock_data[][10] = {{5., 5.,      10.,     12.,     5.,      5.,      10.,
                          {0,  10.5932, 12.8635, 14.8570, 16.7463, 18.5442, 20.2743, 21.9515, 23.5858, 25.1846}};
 
 // Demonstrate some basic assertions.
-//TEST(SPCTest, TestMean) {
-//    CALC_RET ret;
-//    printf("test\n");
-//    int r = CalcMean(mock_data[0], 10, &ret);
-//    EXPECT_EQ(r, ERROR_NO_ERROR);
-//}
-////
-//TEST(SPCTest, TestStandardDeviation) {
-//    CALC_RET ret;
-//    int r = CalcStandardDeviation(mock_data[0], 10, 1, 0.0, &ret);
-//    EXPECT_EQ(r, ERROR_NO_ERROR);
-//}
-
-int main(){
-    printf("111\n");
+TEST(SPCTest, TestMean) {
     CALC_RET ret;
+    printf("test\n");
     int r = CalcMean(mock_data[0], 10, &ret);
-    printf("ret: %f\n", ret.info);
+    EXPECT_EQ(r, ERROR_NO_ERROR);
 }
+//
+TEST(SPCTest, TestStandardDeviation) {
+    CALC_RET ret;
+    int r = CalcStandardDeviation(mock_data[0], 10, 1, 0.0, &ret);
+    EXPECT_EQ(r, ERROR_NO_ERROR);
+}
+
+//int main(){
+//    printf("111\n");
+//    CALC_RET ret;
+//    int r = CalcMean(mock_data[0], 10, &ret);
+//    printf("ret: %f\n", ret.info);
+//}
 

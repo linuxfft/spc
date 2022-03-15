@@ -2,15 +2,6 @@ cmake_minimum_required(VERSION 3.20)
 project(spc)
 set(CMAKE_CXX_STANDARD 14)
 
-cmake_minimum_required(VERSION 3.20)
-project(spc_lib)
-set(CMAKE_CXX_STANDARD 11)
-set(Python3_ROOT_DIR D:\\venv\\vhls) # 根据实际情况修改此行
-# set(Python3_ROOT_DIR  ${PYTHON3_ROOT_DIR}) # 根据实际情况修改此行
-
-find_package(Python3 COMPONENTS Interpreter Development NumPy REQUIRED)
-
-
 set(SOURCE_FILES src/spc.cpp src/stats.cpp)
 
 add_library(spc_lib_obj OBJECT "")
@@ -20,18 +11,10 @@ target_sources(spc_lib_obj
         ${SOURCE_FILES}
         )
 
-message(${Python3_NumPy_INCLUDE_DIRS})
-
-target_link_directories(spc_lib_obj
-        PRIVATE
-        ${Python3_NumPy_INCLUDE_DIRS}/../lib)
-
 target_include_directories(spc_lib_obj
         PRIVATE
         include
         numcpp/include
-        ${Python3_NumPy_INCLUDE_DIRS}
-        ${Python3_INCLUDE_DIRS}
         )
 
 add_subdirectory(numcpp)
