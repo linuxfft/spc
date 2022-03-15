@@ -17,16 +17,16 @@ using namespace nc;
  * @return
  */
 
-int xbarSbar(double **data, size_t n_col, size_t n_row, SPC_RET **spc_ret) {
+ST_RET xbarSbar(double **data, size_t n_col, size_t n_row, SPC_RET **spc_ret) {
     if (n_row < 2 || n_row > 10) {
         return ERROR_DATA_SIZE;
     }
 
-    if (*spc_ret == NULL) {
+    if (NULL == *spc_ret) {
         return ERROR_NULL_PTR;
     }
 
-    if (data == NULL) {
+    if (NULL == data) {
         return ERROR_NULL_PTR;
     }
 
@@ -86,9 +86,9 @@ int xbarSbar(double **data, size_t n_col, size_t n_row, SPC_RET **spc_ret) {
  * @return CPK数值
  */
 
-float cpk(double *data, size_t length, double usl, double lsl) {
-    float Cpk = 0.0;
-    if (data == NULL) {
+double cpk(double *data, size_t length, double usl, double lsl) {
+    double Cpk = 0.0;
+    if (NULL == data) {
         return Cpk;
     }
     if (length <= 0) {
@@ -100,14 +100,14 @@ float cpk(double *data, size_t length, double usl, double lsl) {
     CALC_RET ret;
     ST_RET stRet;
     stRet = CalcMean(data, length, &ret);
-    float mean = ret.data;
+    double mean = ret.data;
 
     stRet = CalcStandardDeviation(data, length, 1, mean, &ret);
 
-    float sigma = ret.data;
+    double sigma = ret.data;
 
-    float Cpu = float(usl - mean) / (3 * sigma);
-    float Cpl = float(mean - lsl) / (3 * sigma);
+    double Cpu = (usl - mean) / (3 * sigma);
+    double Cpl = (mean - lsl) / (3 * sigma);
     Cpk = fmin(Cpu, Cpl);
 
     return Cpk;
@@ -123,7 +123,7 @@ float cpk(double *data, size_t length, double usl, double lsl) {
  */
 double cmk(double *data, size_t length, double usl, double lsl) {
     double Cmk = 0.0;
-    if (data == NULL) {
+    if (NULL == data) {
         return Cmk;
     }
     if (length <= 0) {
@@ -162,7 +162,7 @@ double cmk(double *data, size_t length, double usl, double lsl) {
  */
 double cp(double *data, size_t length, double usl, double lsl) {
     double Cp = 0.0;
-    if (data == NULL) {
+    if (NULL == data) {
         return Cp;
     }
     if (length <= 0) {
@@ -178,7 +178,6 @@ double cp(double *data, size_t length, double usl, double lsl) {
 
     double sigma = ret.data;
 
-    sigma = ret.data;
     Cp = (usl - lsl) / 6 * sigma;
 
     return Cp;
