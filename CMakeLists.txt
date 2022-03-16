@@ -1,11 +1,11 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.17)
 project(spc)
 set(CMAKE_CXX_STANDARD 14)
 
 set(SOURCE_FILES src/spc.cpp src/stats.cpp)
 
 add_library(spc_lib_obj OBJECT "")
-
+target_compile_options(spc_lib_obj PRIVATE -fPIC)
 target_sources(spc_lib_obj
         PRIVATE
         ${SOURCE_FILES}
