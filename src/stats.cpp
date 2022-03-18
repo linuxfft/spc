@@ -9,6 +9,9 @@
 
 using namespace nc;
 
+/*! *@description
+ * 求样本的标准差
+ */
 ST_RET CalcStandardDeviation(double *data, size_t length, int ddof, double mean, CALC_RET *ret) {
     float sum = 0.0, sDeviation = 0.0;
     int i, sRet = ERROR_NO_ERROR;
@@ -51,6 +54,9 @@ ST_RET CalcStandardDeviation(double *data, size_t length, int ddof, double mean,
     return sRet;
 }
 
+/*! *@description
+ * 求样本的平均值
+ */
 ST_RET CalcAvg(double *data, size_t length, CALC_RET *ret) {
     float sum = 0.0;
     ST_RET sRet = ERROR_NO_ERROR;
@@ -78,7 +84,9 @@ ST_RET CalcAvg(double *data, size_t length, CALC_RET *ret) {
     return ERROR_NO_ERROR;
 }
 
-
+/*! *@description
+ * 求样本的平均值，作用同CalcAvg
+ */
 ST_RET CalcMean(double *data, size_t length, CALC_RET *ret) {
     double sum = 0.0;
     ST_RET sRet = ERROR_NO_ERROR;
@@ -106,7 +114,9 @@ ST_RET CalcMean(double *data, size_t length, CALC_RET *ret) {
     return ERROR_NO_ERROR;
 }
 
-
+/*! *@description
+ * 直方图数据 y轴为样本在各个范围内的比例，x轴为样本的统计范围
+ */
 ST_RET CalcHistogram(double *data, size_t length, float usl, float lsl, int step, bool density, PLOT_RET **ret) {
     ST_RET sRet = ERROR_NO_ERROR;
     if (data == NULL) {
@@ -170,7 +180,9 @@ double normFun(double x, double mu, double sigma) {
     return pdf;
 }
 
-
+/*! *@description
+ * 标准正态分布直方图数据 y轴为以样本的均值和方差对应的正态分布在各个范围内的比例，x轴为样本的统计范围
+ */
 ST_RET CalcNormalDist(double *data, size_t length, float usl, float lsl, int step, bool density, PLOT_RET **ret) {
     ST_RET sRet = ERROR_NO_ERROR;
     if (data == NULL) {
