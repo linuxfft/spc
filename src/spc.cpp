@@ -1,7 +1,6 @@
 //
 // Created by 华为 on 2022/3/11.
 //
-
 #include "spc.h"
 #include "table.h"
 #include "stats.h"
@@ -17,6 +16,12 @@ using namespace nc;
  * @return
  */
 
+
+/*! *@description
+ * 均值极差图。
+ * 连续每n的数据的均值的变化图
+ * 可以直观反应设备的稳定性，以及性能的实时变化。
+ */
 ST_RET xbarSbar(double **data, size_t n_col, size_t n_row, SPC_RET **spc_ret) {
     if (n_row < 2 || n_row > 10) {
         return ERROR_DATA_SIZE;
@@ -86,6 +91,15 @@ ST_RET xbarSbar(double **data, size_t n_col, size_t n_row, SPC_RET **spc_ret) {
  * @return CPK数值
  */
 
+/*! *@description
+ * cpk:制程能力指数，制程水准的量化反应，实质作用是反应制程合格率的高低。
+ * usl:即规格上限。指的是控制目标参数的最大合格上限值
+ * lsl:即规格下限。指的是控制目标参数的最小合格下限值
+ * ps: cpk的计算方式为样本均值与规格上下限的距离最小值，与样本方差的比值。
+ * cpk越小，代表样本约接近上限或者下限，并且离散程度越高。
+ * cpk越大，代表样本约接近上限下限之间的中线，并且离散程度越低。
+ * 因此 cpk越大代表设备加工能力越优且稳定
+ */
 double cpk(double *data, size_t length, double usl, double lsl) {
     double Cpk = 0.0;
     if (NULL == data) {
@@ -121,6 +135,13 @@ double cpk(double *data, size_t length, double usl, double lsl) {
  * @param lsl
  * @return CMK数值
  */
+
+/*! *@description
+ * cmk的作用与上述cpk的作用类似。
+ * 由于仅考虑设备本身的影响，因此在采样时对其他因素要严加控制，尽量避免其他因素的干扰。
+ * 由于仅考虑设备本身的影响，因此在采样时对其他因素要严加控制，尽量避免其他因素的干扰，计算公式与Ppk相同，只是取样不同。
+ */
+
 double cmk(double *data, size_t length, double usl, double lsl) {
     double Cmk = 0.0;
     if (NULL == data) {
@@ -160,6 +181,13 @@ double cmk(double *data, size_t length, double usl, double lsl) {
  * @param lsl
  * @return CP数值
  */
+
+
+/*! *@description
+ * cp又称为过程能力；他只统计稳定的过程。
+ * 是过程在受控状态下的实际加工能力，不考虑过程的中心是否有偏移。
+ * cp值越大过程的离散程度越小，加工能力越稳定。但它无法体现过程的中心是否偏移。
+*/
 double cp(double *data, size_t length, double usl, double lsl) {
     double Cp = 0.0;
     if (NULL == data) {
@@ -191,6 +219,12 @@ double cp(double *data, size_t length, double usl, double lsl) {
  * @param lsl
  * @return CR数值
  */
+
+/*! *@description
+ * cr是cp的倒数。
+ * cr值越大过程的离散程度越大，加工能力越不稳定
+ * */
+
 double cr(double *data, size_t length, double usl, double lsl) {
     double Cr = 0.0;
     double Cp = cp(data, length, usl, lsl);
