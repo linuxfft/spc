@@ -50,7 +50,7 @@ ST_RET CalcStandardDeviation(double *data, size_t length, int ddof, double mean,
         sDeviation += pow(data[i] - mean, 2);
     }
 
-    ret->data = nc::round(sqrt(sDeviation / length - ddof), 2);
+    ret->data = nc::round(sqrt(sDeviation / (length - ddof)), 2);
     return sRet;
 }
 

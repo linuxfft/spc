@@ -22,12 +22,14 @@ TEST(SPCTest, TestMean) {
     CALC_RET ret;
     printf("test\n");
     int r = CalcMean(mock_data[0], 10, &ret);
+    printf("计算出十个数据[5.,5.,10.,12.,5.,5.,10.,12.,5.,5.]的平均值为：%f",ret.data);
     EXPECT_EQ(r, ERROR_NO_ERROR);
 }
 //
 TEST(SPCTest, TestStandardDeviation) {
     CALC_RET ret;
     int r = CalcStandardDeviation(mock_data[0], 10, 1, 0.0, &ret);
+    printf("计算出十个数据[5.,5.,10.,12.,5.,5.,10.,12.,5.,5.]的标准差为：%f",ret.data);
     EXPECT_EQ(r, ERROR_NO_ERROR);
 }
 
