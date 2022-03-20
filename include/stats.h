@@ -17,6 +17,12 @@ ST_RET CalcMean(double *data, size_t length, CALC_RET *ret);
 
 ST_RET CalcAvg(double *data, size_t length, CALC_RET *ret);
 
+ST_RET CalcHistogram(double *data, size_t length, float usl, float lsl, int step, bool density, PLOT_RET **ret);
+
+ST_RET CalcNormalDist(double *data, size_t length, float usl, float lsl, int step, bool density, PLOT_RET **ret);
+
+double normFun(double x, double mu, double sigma);
+
 #ifdef __cplusplus
 }
 #endif
