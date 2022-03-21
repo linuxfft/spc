@@ -8,9 +8,9 @@
 #include "common.h"
 #include "error.h"
 
-float cpk(float *data, size_t length, float usl, float lsl);
+double cpk(double *data, size_t length, double usl, double lsl);
 
-int xbarSbar(float **data, size_t n_col, size_t n_row, SPC_RET *spc_ret);
+ST_RET xbarSbar(double **data, size_t n_col, size_t n_row, SPC_RET **spc_ret);
 
 
 #endif //SPC_SPC_H
