@@ -60,7 +60,7 @@ PLOT_RET *create_plot_ret(size_t x_size, size_t y_size) {
     PLOT_RET *ret = (PLOT_RET *) calloc(1, sizeof(PLOT_RET));
     ret->pXData = (double *) calloc(x_size, sizeof(double));
     ret->lXData = x_size;
-    ret->pXData = (double *) calloc(x_size, sizeof(double));
+    ret->pYData = (double *) calloc(y_size, sizeof(double));
     ret->lYData = y_size;
     return ret;
 }
@@ -80,11 +80,12 @@ ST_RET memcpy_plot_ret(PLOT_RET **ret, const double *pX, size_t lX, const double
         realloc_mem(&(pRet->pYData), lY);
     }
 
-    memcpy(pRet->pXData, pX, lX);
+    memcpy(pRet->pXData, pX, lX * sizeof(double));
     pRet->lXData = lX;
 
-    memcpy(pRet->pYData, pY, lY);
+    memcpy(pRet->pYData, pY, lY * sizeof(double));
     pRet->lYData = lY;
+    *ret = pRet;
     return ERROR_NO_ERROR;
 }
 

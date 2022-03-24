@@ -8,6 +8,15 @@
 #include "NumCpp.hpp"
 
 using namespace nc;
+void PrintArray(double *data,int length){
+    int i;
+    double a;
+    for (i = 0; i < length; ++i) {
+        a =data[i];
+        printf("%f, ", data[i]);
+    }
+    printf("\n");
+}
 
 /*! *@description
  * 求样本的标准差
@@ -133,7 +142,6 @@ ST_RET CalcHistogram(double *data, size_t length, float usl, float lsl, int step
     if (*ret == NULL) {
         return ERROR_NULL_PTR;
     }
-
     memset(ret, 0, sizeof(PLOT_RET));
 
     CALC_RET dRet;
@@ -166,7 +174,7 @@ ST_RET CalcHistogram(double *data, size_t length, float usl, float lsl, int step
         if (nc::isnan(x)) {
             y_line[i] = 0; //无效值置位为0
         }
-        y[i] = y_line[i] / length;
+        y[i] = (double)y_line[i] / (double)length;
         eff_length += y_line[i];
     }
 
@@ -200,7 +208,8 @@ ST_RET CalcNormalDist(double *data, size_t length, float usl, float lsl, int ste
         return ERROR_NULL_PTR;
     }
 
-    memset(ret, 0, sizeof(PLOT_RET));
+//    下方的CalcHistogram函数会初始化ret,兼容性考虑，此处不应该再初始化ret,
+//    memset(ret, 0, sizeof(PLOT_RET));
 
     CALC_RET dRet;
 

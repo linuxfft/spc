@@ -1,7 +1,7 @@
 //
 // Created by 华为 on 2022/3/14.
 //
-
+#include "spc.h"
 #include "stats.h"
 #include "error.h"
 #include <gtest/gtest.h>
@@ -41,3 +41,37 @@ TEST(SPCTest, TestnormFun) {
     EXPECT_EQ(d, 0.3989422804014327);
 }
 
+//求cpk函数输出
+//python下函数求出值0.376941059635
+//与python产生差异的原因在于标准差计算时的公式区别(分母为n还是n-1的区别)
+TEST(SPCTest, Testcpk) {
+    double d = cpk(mock_data[0], 10, 14, 4);
+    printf("测试一下cpk函数输出：%f", d);
+    EXPECT_EQ(d, 0.35751839307786898);
+}
+
+//求直方图函数输出
+//python下函数histogram(b, 14, 4, 1)求出值
+//(array([ 4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14]),
+// array([0. , 0.6, 0. , 0. , 0. , 0. , 0.2, 0. , 0.2, 0. ]), 10)
+TEST(SPCTest, TestHistogram) {
+    PLOT_RET *ret;
+    int r = CalcHistogram(mock_data[0], 10, 14, 4,1,1,&ret);
+    printf("测试一下直方图函数输出：\n");
+    PrintArray(ret->pXData,ret->lXData);
+    PrintArray(ret->pYData,ret->lYData);
+    EXPECT_EQ(r, ERROR_NO_ERROR);
+}
+
+//求正态分布直方图函数输出
+//(array([ 4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14]),
+//        array([0.08333197, 0.10867035, 0.12687296, 0.13261286, 0.12409686,
+//0.10396676, 0.07798064, 0.05236459, 0.0314809 , 0.01694397]))
+TEST(SPCTest, TestNormalDist) {
+    PLOT_RET *ret;
+    int r = CalcNormalDist(mock_data[0], 10, 14, 4,1,1,&ret);
+    printf("测试一下正态分布直方图函数输出：\n");
+    PrintArray(ret->pXData,ret->lXData);
+    PrintArray(ret->pYData,ret->lYData);
+    EXPECT_EQ(r, ERROR_NO_ERROR);
+}

@@ -22,7 +22,7 @@ ST_RET CalcHistogram(double *data, size_t length, float usl, float lsl, int step
 ST_RET CalcNormalDist(double *data, size_t length, float usl, float lsl, int step, bool density, PLOT_RET **ret);
 
 double normFun(double x, double mu, double sigma);
-
+void PrintArray(double *data,int length);
 #ifdef __cplusplus
 }
 #endif
