@@ -37,8 +37,9 @@ ST_RET memcpy_spc_ret(SPC_RET **ret, const double *p, size_t size) {
         realloc_mem(&(pRet->pData), size);
     }
 
-    memcpy(pRet->pData, p, size);
+    memcpy(pRet->pData, p, size * sizeof(double));
     pRet->lData = size;
+    *ret = pRet;
     return ERROR_NO_ERROR;
 }
 

@@ -56,10 +56,10 @@ TEST(SPCTest, Testcpk) {
 // array([0. , 0.6, 0. , 0. , 0. , 0. , 0.2, 0. , 0.2, 0. ]), 10)
 TEST(SPCTest, TestHistogram) {
     PLOT_RET *ret;
-    int r = CalcHistogram(mock_data[0], 10, 14, 4,1,1,&ret);
+    int r = CalcHistogram(mock_data[0], 10, 14, 4, 1, 1, &ret);
     printf("测试一下直方图函数输出：\n");
-    PrintArray(ret->pXData,ret->lXData);
-    PrintArray(ret->pYData,ret->lYData);
+    PrintArray(ret->pXData, ret->lXData);
+    PrintArray(ret->pYData, ret->lYData);
     EXPECT_EQ(r, ERROR_NO_ERROR);
 }
 
@@ -69,9 +69,32 @@ TEST(SPCTest, TestHistogram) {
 //0.10396676, 0.07798064, 0.05236459, 0.0314809 , 0.01694397]))
 TEST(SPCTest, TestNormalDist) {
     PLOT_RET *ret;
-    int r = CalcNormalDist(mock_data[0], 10, 14, 4,1,1,&ret);
+    int r = CalcNormalDist(mock_data[0], 10, 14, 4, 1, 1, &ret);
     printf("测试一下正态分布直方图函数输出：\n");
-    PrintArray(ret->pXData,ret->lXData);
-    PrintArray(ret->pYData,ret->lYData);
+    PrintArray(ret->pXData, ret->lXData);
+    PrintArray(ret->pYData, ret->lYData);
+    EXPECT_EQ(r, ERROR_NO_ERROR);
+}
+
+//求xbar_rbar函数输出
+//A = covert2dArray([5., 5., 10., 12., 5., 5., 10., 12., 5., 5.], 2)
+//B = xbar_rbar(A, 2)
+//{'upper': 8.9, 'lower': 5.9, 'data': [5.0, 11.0, 5.0, 11.0, 5.0], 'center': 7.4}
+TEST(SPCTest, TestxbarSbar) {
+    SPC_RET *ret;
+    double A[][2] = {{5.,  5.},
+                     {10., 12.},
+                     {5.,  5.},
+                     {10., 12.},
+                     {5.,  5.}};
+    double *data[5];
+    int i;
+    for (int i = 0; i < 5; ++i) {
+        data[i] = A[i];
+    }
+    int r = xbarSbar(data, 2, 5, &ret);
+    printf("测试一下barSbar函数输出：\n");
+    PrintArray(ret->pData, 5);
+    printf("upper:%f,lower:%f,center:%f",ret->lower,ret->upper,ret->center);
     EXPECT_EQ(r, ERROR_NO_ERROR);
 }
