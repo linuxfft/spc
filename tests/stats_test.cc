@@ -4,6 +4,7 @@
 #include "spc.h"
 #include "stats.h"
 #include "error.h"
+#include "type.h"
 #include <gtest/gtest.h>
 
 
@@ -55,11 +56,12 @@ TEST(SPCTest, Testcpk) {
 //(array([ 4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14]),
 // array([0. , 0.6, 0. , 0. , 0. , 0. , 0.2, 0. , 0.2, 0. ]), 10)
 TEST(SPCTest, TestHistogram) {
-    PLOT_RET *ret;
+    PLOT_RET *ret = NULL;
     int r = CalcHistogram(mock_data[0], 10, 14, 4, 1, 1, &ret);
     printf("测试一下直方图函数输出：\n");
     PrintArray(ret->pXData, ret->lXData);
     PrintArray(ret->pYData, ret->lYData);
+    free_plot_ret(&ret);
     EXPECT_EQ(r, ERROR_NO_ERROR);
 }
 
@@ -68,11 +70,12 @@ TEST(SPCTest, TestHistogram) {
 //        array([0.08333197, 0.10867035, 0.12687296, 0.13261286, 0.12409686,
 //0.10396676, 0.07798064, 0.05236459, 0.0314809 , 0.01694397]))
 TEST(SPCTest, TestNormalDist) {
-    PLOT_RET *ret;
+    PLOT_RET *ret = NULL;
     int r = CalcNormalDist(mock_data[0], 10, 14, 4, 1, 1, &ret);
     printf("测试一下正态分布直方图函数输出：\n");
     PrintArray(ret->pXData, ret->lXData);
     PrintArray(ret->pYData, ret->lYData);
+    free_plot_ret(&ret);
     EXPECT_EQ(r, ERROR_NO_ERROR);
 }
 
@@ -87,14 +90,14 @@ TEST(SPCTest, TestxbarSbar) {
                      {5.,  5.},
                      {10., 12.},
                      {5.,  5.}};
-    double *data[5];
-    int i;
+    double *data[5] = {NULL};
     for (int i = 0; i < 5; ++i) {
         data[i] = A[i];
     }
     int r = xbarSbar(data, 2, 5, &ret);
     printf("测试一下barSbar函数输出：\n");
     PrintArray(ret->pData, 5);
-    printf("upper:%f,lower:%f,center:%f",ret->lower,ret->upper,ret->center);
+    printf("upper:%f,lower:%f,center:%f", ret->lower, ret->upper, ret->center);
+    free_spc_ret(&ret);
     EXPECT_EQ(r, ERROR_NO_ERROR);
 }
