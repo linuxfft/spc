@@ -8,11 +8,12 @@
 #include "NumCpp.hpp"
 
 using namespace nc;
-void PrintArray(double *data,int length){
+
+void PrintArray(double *data, int length) {
     int i;
     double a;
     for (i = 0; i < length; ++i) {
-        a =data[i];
+        a = data[i];
         printf("%f, ", data[i]);
     }
     printf("\n");
@@ -139,10 +140,11 @@ ST_RET CalcHistogram(double *data, size_t length, float usl, float lsl, int step
         return ERROR_OVER_FLOW;
     }
 
-    if (*ret == NULL) {
+    if (*ret != NULL) {
+        //确保不是野指针
         return ERROR_NULL_PTR;
     }
-    memset(ret, 0, sizeof(PLOT_RET));
+//    memset(ret, 0, sizeof(PLOT_RET));
 
     CALC_RET dRet;
 
@@ -174,11 +176,14 @@ ST_RET CalcHistogram(double *data, size_t length, float usl, float lsl, int step
         if (nc::isnan(x)) {
             y_line[i] = 0; //无效值置位为0
         }
-        y[i] = (double)y_line[i] / (double)length;
+        y[i] = (double) y_line[i] / (double) length;
         eff_length += y_line[i];
     }
 
     memcpy_plot_ret(ret, bins.data(), bins.size(), y, y_size);
+
+    free(y);
+    y = NULL;
 
     return ERROR_NO_ERROR;
 }
@@ -204,7 +209,8 @@ ST_RET CalcNormalDist(double *data, size_t length, float usl, float lsl, int ste
         return ERROR_OVER_FLOW;
     }
 
-    if (*ret == NULL) {
+    if (*ret != NULL) {
+        //确保不是野指针
         return ERROR_NULL_PTR;
     }
 
@@ -230,7 +236,7 @@ ST_RET CalcNormalDist(double *data, size_t length, float usl, float lsl, int ste
     PLOT_RET *pRet = *ret;
 
     if (pRet != NULL) {
-        for (int i = 0; i <= pRet->lXData; ++i) {
+        for (int i = 0; i < pRet->lXData - 1; ++i) { //防止内存过限
             double a = pRet->pXData[i];
             double b = pRet->pXData[i + 1];
             double d = normFun((a + b) / 2, mean, sigma) * step;

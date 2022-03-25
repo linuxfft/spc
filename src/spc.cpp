@@ -22,7 +22,7 @@ using namespace nc;
  * 连续每n的数据的均值的变化图
  * 可以直观反应设备的稳定性，以及性能的实时变化。
  */
- //todo 考虑传入一个一维数组data,在函数内部进行拆分成二维数组
+//todo 考虑传入一个一维数组data,在函数内部进行拆分成二维数组
 ST_RET xbarSbar(double **data, size_t n_col, size_t n_row, SPC_RET **spc_ret) {
     if (n_col < 2 || n_col > 10) {
         return ERROR_DATA_SIZE;
