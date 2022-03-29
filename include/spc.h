@@ -8,7 +8,21 @@
 #include "common.h"
 #include "error.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 double cpk(double *data, size_t length, double usl, double lsl);
+
+double cmk(double *data, size_t length, double usl, double lsl);
+
+double cp(double *data, size_t length, double usl, double lsl);
+
+double cr(double *data, size_t length, double usl, double lsl);
+
+#ifdef __cplusplus
+}
+#endif
 
 ST_RET xbarSbar(double **data, size_t n_col, size_t n_row, SPC_RET **spc_ret);
 
