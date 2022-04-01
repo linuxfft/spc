@@ -237,3 +237,28 @@ double cr(double *data, size_t length, double usl, double lsl) {
 }
 
 
+/*!
+ *
+ * @param data: 一维原始数据
+ * @param length: 数据长度
+ * @return 标准差
+ */
+double calc_std(double *data, size_t length) {
+    double Std = 0.0;
+    if (NULL == data) {
+        return Std;
+    }
+    if (length <= 0) {
+        return Std;
+    }
+    ST_RET stRet;
+    CALC_RET ret;
+
+    stRet = CalcMean(data, length, &ret);
+    double mean = ret.data;
+    stRet = CalcStandardDeviation(data, length, 1, mean, &ret);
+
+    double sigma = ret.data;
+
+    return sigma;
+}

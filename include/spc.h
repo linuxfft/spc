@@ -20,6 +20,8 @@ double cp(double *data, size_t length, double usl, double lsl);
 
 double cr(double *data, size_t length, double usl, double lsl);
 
+double calc_std(double *data, size_t length);
+
 #ifdef __cplusplus
 }
 #endif
