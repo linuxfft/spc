@@ -206,6 +206,38 @@ double cpk(double *data, size_t length, double usl, double lsl) {
     return Cpk;
 }
 
+
+/*! *@description
+ * cm:考量的是理想情况下工具拧紧结果的一致性，它只与边界和离散度有关。
+ * usl:即规格上限。指的是控制目标参数的最大合格上限值
+ * lsl:即规格下限。指的是控制目标参数的最小合格下限值
+ * ps: cpk的计算方式为样本均值与规格上下限的距离最小值，与样本方差的比值。
+ */
+double cm(double *data, size_t length, double usl, double lsl) {
+    double Cm = 0.0;
+    if (NULL == data) {
+        return Cm;
+    }
+    if (length <= 0) {
+        return Cm;
+    }
+    if (usl <= 0.0 || lsl <= 0.0) {
+        return Cm;
+    }
+    CALC_RET ret;
+    ST_RET stRet;
+    stRet = CalcMean(data, length, &ret);
+    double mean = ret.data;
+
+    stRet = CalcStandardDeviation(data, length, 1, mean, &ret);
+
+    double sigma = ret.data;
+
+    Cm = (usl - lsl) / (6 * sigma);
+    return Cm;
+}
+
+
 /*!
  *
  * @param data: 一维原始数据

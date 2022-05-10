@@ -124,3 +124,11 @@ TEST(SPCTest, TestxbarRbar) {
     free_spc_ret(&ret);
     EXPECT_EQ(r, ERROR_NO_ERROR);
 }
+
+//求cm函数输出
+TEST(SPCTest, Testcm) {
+    double d = cm(mock_data[0], 10, 14, 4);
+    printf("测试一下cm函数输出：%f", d);
+    EXPECT_EQ(d, 0.52576234276157197);
+}
+

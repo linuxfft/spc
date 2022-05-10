@@ -16,6 +16,8 @@ double cpk(double *data, size_t length, double usl, double lsl);
 
 double cmk(double *data, size_t length, double usl, double lsl);
 
+double cm(double *data, size_t length, double usl, double lsl);
+
 double cp(double *data, size_t length, double usl, double lsl);
 
 double cr(double *data, size_t length, double usl, double lsl);
