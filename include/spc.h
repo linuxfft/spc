@@ -27,6 +27,6 @@ double calc_std(double *data, size_t length);
 #endif
 
 ST_RET xbarSbar(double **data, size_t n_col, size_t n_row, SPC_RET **spc_ret);
-
+ST_RET xbarRbar(double **data, size_t n_col, size_t n_row, SPC_RET **spc_ret);
 
 #endif //SPC_SPC_H

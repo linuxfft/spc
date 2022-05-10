@@ -75,13 +75,91 @@ ST_RET xbarSbar(double **data, size_t n_col, size_t n_row, SPC_RET **spc_ret) {
 
     SPC_RET *pRet = *spc_ret;
 
-    pRet->center = nc::round(sbar_ret.data, 2);
+    pRet->center = nc::round(xbar_ret.data, 2);
     pRet->lower = nc::round(lclx, 2);
     pRet->upper = nc::round(uclx, 2);
 
     return ERROR_NO_ERROR;
 }
 
+
+double maxToMin(double *data, size_t n_col) {
+    double x_max = data[0], x_min = data[0];
+    for (int i = 0; i < n_col; i++) {
+
+        if (x_max < data[i]) {
+            x_max = data[i];
+        }
+        if (x_min > data[i]) {
+            x_min = data[i];
+        }
+    }
+    return x_max - x_min;
+}
+
+/*! *@description
+ * 控制图。
+ * 连续每n的数据的均值的变化图，区别与xbar-sbar为上下限区别
+ * 可以直观反应设备的稳定性，以及性能的实时变化。
+ */
+//todo 考虑传入一个一维数组data,在函数内部进行拆分成二维数组
+ST_RET xbarRbar(double **data, size_t n_col, size_t n_row, SPC_RET **spc_ret) {
+    if (n_col < 2 || n_col > 10) {
+        return ERROR_DATA_SIZE;
+    }
+
+    if (NULL == *spc_ret) {
+        return ERROR_NULL_PTR;
+    }
+
+    if (NULL == data) {
+        return ERROR_NULL_PTR;
+    }
+
+    double *R, *X = NULL;
+    R = (double *) calloc(n_row, sizeof(double));
+    X = (double *) calloc(n_row, sizeof(double));
+
+    CALC_RET x_ret;
+    int ret = ERROR_NO_ERROR;
+    double x_mean, r_ret;
+
+    for (int i = 0; i < n_row; ++i) {
+        double *d = data[i];
+        if (d == NULL) {
+            return ERROR_NULL_PTR;
+        }
+        CalcMean(d, n_col, &x_ret);
+        if (x_ret.ret == ERROR_NO_ERROR) {
+            x_mean = x_ret.data;
+            X[i] = x_mean;
+        } else {
+            return ERROR_NO_ERROR;
+        }
+        // Calculating max-min
+        r_ret = maxToMin(data[i], n_col);
+        R[i] = r_ret;
+
+    }
+
+    CALC_RET rbar_ret, xbar_ret;
+
+    CalcMean(R, n_row, &rbar_ret);
+    CalcMean(X, n_row, &xbar_ret);
+
+    double lclx = xbar_ret.data - A2[n_col] * rbar_ret.data;
+    double uclx = xbar_ret.data + A2[n_col] * rbar_ret.data;
+    memset(spc_ret, 0, sizeof(SPC_RET));
+    memcpy_spc_ret(spc_ret, X, n_row);
+
+    SPC_RET *pRet = *spc_ret;
+
+    pRet->center = nc::round(xbar_ret.data, 2);
+    pRet->lower = nc::round(lclx, 2);
+    pRet->upper = nc::round(uclx, 2);
+
+    return ERROR_NO_ERROR;
+}
 
 /*!
  *
