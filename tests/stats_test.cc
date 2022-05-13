@@ -79,9 +79,9 @@ TEST(SPCTest, TestNormalDist) {
     EXPECT_EQ(r, ERROR_NO_ERROR);
 }
 
-//求xbar_rbar函数输出
+//求xbar_sbar函数输出
 //A = covert2dArray([5., 5., 10., 12., 5., 5., 10., 12., 5., 5.], 2)
-//B = xbar_rbar(A, 2)
+//B = xbar_sbar(A, 2,None)
 //{'upper': 8.9, 'lower': 5.9, 'data': [5.0, 11.0, 5.0, 11.0, 5.0], 'center': 7.4}
 TEST(SPCTest, TestxbarSbar) {
     SPC_RET *ret;
@@ -101,3 +101,34 @@ TEST(SPCTest, TestxbarSbar) {
     free_spc_ret(&ret);
     EXPECT_EQ(r, ERROR_NO_ERROR);
 }
+
+//求xbar_rbar函数输出
+//A = covert2dArray([5., 5., 10., 12., 5., 5., 10., 12., 5., 5.], 2)
+//B = xbar_rbar(A, 2)
+//{'upper': 8.9, 'lower': 5.9, 'data': [5.0, 11.0, 5.0, 11.0, 5.0], 'center': 7.4}
+TEST(SPCTest, TestxbarRbar) {
+    SPC_RET *ret;
+    double A[][2] = {{5.,  5.},
+                     {10., 12.},
+                     {5.,  5.},
+                     {10., 12.},
+                     {5.,  5.}};
+    double *data[5] = {NULL};
+    for (int i = 0; i < 5; ++i) {
+        data[i] = A[i];
+    }
+    int r = xbarRbar(data, 2, 5, &ret);
+    printf("测试一下barRbar函数输出：\n");
+    PrintArray(ret->pData, 5);
+    printf("upper:%f,lower:%f,center:%f", ret->lower, ret->upper, ret->center);
+    free_spc_ret(&ret);
+    EXPECT_EQ(r, ERROR_NO_ERROR);
+}
+
+//求cm函数输出
+TEST(SPCTest, Testcm) {
+    double d = cm(mock_data[0], 10, 14, 4);
+    printf("测试一下cm函数输出：%f", d);
+    EXPECT_EQ(d, 0.52576234276157197);
+}
+
