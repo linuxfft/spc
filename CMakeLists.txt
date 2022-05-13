@@ -42,6 +42,10 @@ add_library(spc_lib SHARED $<TARGET_OBJECTS:spc_lib_obj>)
 add_library(spc_libStatic STATIC $<TARGET_OBJECTS:spc_lib_obj>)
 set_target_properties(spc_libStatic PROPERTIES OUTPUT_NAME spc_lib)
 
+if(MINGW)
+    target_link_libraries(spc_lib -static stdc++ -dynamic)
+endif()
+
 # For Windows: Prevent overriding the parent project's compiler/linker settings
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 enable_testing()
