@@ -260,7 +260,7 @@ def cp(data, usl, lsl):
     if not data:
         return None
     sigma = np.std(data)
-    ret = (usl - lsl) / 6 * sigma
+    ret = (usl - lsl) / (6 * sigma)
     return round(ret, 2)
 
 
