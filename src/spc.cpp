@@ -317,7 +317,7 @@ double cp(double *data, size_t length, double usl, double lsl) {
 
     double sigma = ret.data;
 
-    Cp = (usl - lsl) / 6 * sigma;
+    Cp = (usl - lsl) / (6 * sigma);
 
     return Cp;
 }
