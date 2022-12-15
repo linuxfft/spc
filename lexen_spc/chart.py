@@ -19,6 +19,25 @@ def covert2dArray(data, size):
     return ret
 
 
+def xbar(data, size):
+    X = []
+    array_2d_data = covert2dArray(data, size)
+    for xs in array_2d_data:
+        assert len(xs) == size
+        X.append(round(np.mean(xs), 2))
+    xbar = np.mean(X)
+    sigma = np.std(data, ddof=1)
+    lclx = xbar - 3 * sigma
+    uclx = xbar + 3 * sigma
+    ret = {
+        "data": X,
+        "center": round(xbar, 2),
+        "lower": round(lclx, 2),
+        "upper": round(uclx, 2),
+    }
+    return ret
+
+
 def xbar_sbar(data, size, newdata):
     # type: (np.ndarray, int, Any) ->  Optional[Dict]
     assert size >= 2
