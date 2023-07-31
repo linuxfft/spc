@@ -242,7 +242,7 @@ def sbar(data, size, newdata):
 
 def cpk(data, usl, lsl):
     # type: (List[float], float, float) -> Optional[float]
-    if not usl or not lsl:
+    if usl is None or lsl is None:
         return None
     if not data:
         return None
@@ -258,7 +258,7 @@ def cpk(data, usl, lsl):
 
 def cmk(data, usl, lsl):
     # type: (List[float], float, float) -> Optional[float]
-    if not usl or not lsl:
+    if usl is None or lsl is None:
         return None
     if not data:
         return None
@@ -274,7 +274,7 @@ def cmk(data, usl, lsl):
 
 def cp(data, usl, lsl):
     # type: (List[float], float, float) -> Optional[float]
-    if not usl or not lsl:
+    if usl is None or lsl is None:
         return None
     if not data:
         return None
@@ -285,7 +285,7 @@ def cp(data, usl, lsl):
 
 def cr(data, usl, lsl):
     # type: (List[float], float, float) -> Optional[float]
-    if not usl or not lsl:
+    if usl is None or lsl is None:
         return None
     if not data:
         return None
