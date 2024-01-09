@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import division  # 精确除以
 import numpy as np
-from .table import A2, A3, D3, D4, B3, B4
-# from typing import List, Optional, Dict, Any
+from .table import A2, A3, D3, D4, B3, B4, d2
+from typing import List, Optional, Dict, Any, Union
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -272,17 +272,6 @@ def cmk(data, usl, lsl):
     return round(cmk, 2)
 
 
-def cp(data, usl, lsl):
-    # type: (List[float], float, float) -> Optional[float]
-    if usl is None or lsl is None:
-        return None
-    if not data:
-        return None
-    sigma = np.std(data)
-    ret = (usl - lsl) / (6 * sigma)
-    return round(ret, 2)
-
-
 def cr(data, usl, lsl):
     # type: (List[float], float, float) -> Optional[float]
     if usl is None or lsl is None:
@@ -292,3 +281,39 @@ def cr(data, usl, lsl):
     sigma = np.std(data)
     ret = 6 * sigma / (usl - lsl)
     return round(ret, 2)
+
+
+def pci(data: Union[list, np.array], ret_type: str = "pp", sigma: Optional[float] = None,
+        usl: Optional[float] = None, lsl: Optional[float] = None) -> dict:
+    ret = {}
+    if len(data) <= 1:
+        return ret
+    m = np.mean(data)
+    if not sigma:
+        sigma = np.std(data)
+    if usl is None or lsl is None:
+        return ret
+    Pp = round((usl - lsl) / (6 * sigma), 2)
+    Ppu = round(float(usl - m) / (3 * sigma), 2)
+    Ppl = round(float(m - lsl) / (3 * sigma), 2)
+    Ppk = np.min([Ppu, Ppl])
+    ret = {
+        f"{ret_type}": Pp,
+        f"{ret_type}l": Ppl,
+        f"{ret_type}u": Ppu,
+        f"{ret_type}k": Ppk,
+    }
+    return ret
+
+
+def cp_sigma(data: np.array, size: int = 1) -> float:
+    if len(data) <= 1 or size < 1:
+        return 0.0
+    if size == 1:
+        # 计算MR
+        MR = [abs(data[i + 1] - data[i]) for i in range(len(data) - 1)]
+        sigma = np.mean(MR) / d2[2]
+    else:
+        R = [round(max(xs) - min(xs), 2) for xs in data]
+        sigma = np.mean(R) / d2[size]
+    return sigma
